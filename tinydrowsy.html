@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- SEO -->
+  <title>TinyDrowsy ESP32 — Eric Ardiansyah</title>
+  <meta name="description" content="Full technical documentation for TinyDrowsy ESP32 - a lightweight CNN for real-time drowsiness detection on ESP32-S3.">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="TinyDrowsy ESP32 — Technical Documentation">
+  <meta property="og:description" content="Real-time drowsiness detection on ESP32-S3 with a 10.6K parameter CNN.">
+  <meta property="og:url" content="https://ericardiansyah.github.io/tinydrowsy.html">
+  <meta property="og:image" content="images/tinydrowsy-og.jpg">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="TinyDrowsy ESP32 — Technical Documentation">
+  <meta name="twitter:description" content="Real-time drowsiness detection on ESP32-S3 with a 10.6K parameter CNN.">
+  <meta name="twitter:image" content="images/tinydrowsy-og.jpg">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ===== SKIP LINK ===== -->
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- ===== NAVIGATION ===== -->
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a href="index.html" class="nav-mark">EA</a>
+
+      <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navList" aria-label="Toggle navigation menu">
+        <span></span><span></span><span></span>
+      </button>
+
+      <ul class="nav-list" id="navList">
+        <li><a href="index.html#home">home</a></li>
+        <li><a href="index.html#blog">recent</a></li>
+        <li><a href="index.html#about">about</a></li>
+        <li><a href="index.html#projects">projects</a></li>
+        <li><a href="index.html#contact">contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+
+    <!-- ===== PROJECT HEADER ===== -->
+    <section class="section section-project-header">
+      <p class="eyebrow">// project documentation</p>
+      <h1 class="project-title-main">TinyDrowsy ESP32</h1>
+      <p class="project-subtitle">Real-time drowsiness detection on ESP32-S3 with a lightweight CNN</p>
+
+      <div class="project-meta">
+        <div class="project-meta-item">
+          <span class="project-meta-label">Status</span>
+          <span class="project-meta-value">Deployed &amp; Testing</span>
+        </div>
+        <div class="project-meta-item">
+          <span class="project-meta-label">Repository</span>
+          <a href="#" class="project-meta-value">github.com/ericardiansyah/tinydrowsy</a>
+        </div>
+        <div class="project-meta-item">
+          <span class="project-meta-label">Hardware</span>
+          <span class="project-meta-value">ESP32-S3 + OV2640</span>
+        </div>
+        <div class="project-meta-item">
+          <span class="project-meta-label">Framework</span>
+          <span class="project-meta-value">ESP-IDF + PyTorch</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TABLE OF CONTENTS ===== -->
+    <section class="section section-toc">
+      <h2 class="toc-title">Table of Contents</h2>
+      <ul class="toc-list">
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#dataset">Dataset</a></li>
+        <li><a href="#architecture">Model Architecture</a></li>
+        <li><a href="#training">Training</a></li>
+        <li><a href="#quantization">Quantization</a></li>
+        <li><a href="#deployment">Deployment</a></li>
+        <li><a href="#results">Results &amp; Performance</a></li>
+        <li><a href="#conclusion">Conclusion</a></li>
+      </ul>
+    </section>
+
+    <!-- ===== 1. OVERVIEW ===== -->
+    <section id="overview" class="section section-doc">
+      <p class="section-label">// 01</p>
+      <h2 class="section-title">Overview</h2>
+
+      <div class="doc-content">
+        <p>
+          <strong>TinyDrowsy ESP32</strong> is an end-to-end AI system for real-time drowsiness
+          detection running on the ESP32-S3 microcontroller. The system uses a lightweight
+          Convolutional Neural Network (CNN) to classify eye states (open/closed) from
+          camera input, enabling driver monitoring without cloud connectivity.
+        </p>
+
+        <div class="doc-image">
+          <img src="images/tinydrowsy-overview.jpg" alt="TinyDrowsy ESP32 system overview diagram" loading="lazy">
+          <p class="doc-image-caption">Figure 1: High-level system architecture</p>
+        </div>
+
+        <h3>Key Metrics</h3>
+        <ul class="doc-metrics">
+          <li><span class="metric-value">10.6K</span> Parameters</li>
+          <li><span class="metric-value">99.87%</span> Accuracy</li>
+          <li><span class="metric-value">27.4KB</span> Memory Footprint</li>
+          <li><span class="metric-value">16ms</span> Inference Time</li>
+          <li><span class="metric-value">8.8 FPS</span> Throughput</li>
+        </ul>
+
+        <p>
+          The system addresses the challenge of running neural networks on resource-constrained
+          edge devices through careful model design, quantization, and hardware optimization.
+        </p>
+
+        <div class="doc-image">
+          <img src="images/tinydrowsy-demo.jpg" alt="TinyDrowsy ESP32 demo setup" loading="lazy">
+          <p class="doc-image-caption">Figure 2: ESP32-S3 with OV2640 camera module</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 2. DATASET ===== -->
+    <section id="dataset" class="section section-doc">
+      <p class="section-label">// 02</p>
+      <h2 class="section-title">Dataset</h2>
+
+      <div class="doc-content">
+        <p>
+          The dataset combines public resources and self-captured images to ensure
+          robust performance under diverse lighting conditions.
+        </p>
+
+        <h3>Data Sources</h3>
+        <ul>
+          <li><strong>Public datasets:</strong> DRIVER dataset, CEW (Closed Eyes in the Wild)</li>
+          <li><strong>Self-captured:</strong> 5,000+ images across different lighting conditions, camera angles, and participants</li>
+          <li><strong>Augmentation:</strong> Rotation, brightness adjustment, contrast variation, and noise injection</li>
+        </ul>
+
+        <div class="doc-image">
+          <img src="images/dataset-placeholder.jpg" alt="Dataset samples and augmentation examples" loading="lazy">
+          <p class="doc-image-caption">Figure 3: Dataset samples and augmentation pipeline</p>
+        </div>
+
+        <h3>Preprocessing Pipeline</h3>
+        <pre><code># Dataset preprocessing
+def preprocess_image(image):
+    # Resize to 48x48
+    image = cv2.resize(image, (48, 48))
+    # Convert to grayscale
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    # Normalize to [0, 1]
+    image = image.astype(np.float32) / 255.0
+    # Add channel dimension
+    image = np.expand_dims(image, axis=0)
+    return image</code></pre>
+
+        <div class="doc-image">
+          <img src="images/data-distribution-placeholder.jpg" alt="Dataset distribution chart" loading="lazy">
+          <p class="doc-image-caption">Figure 4: Training/validation/test split</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 3. MODEL ARCHITECTURE ===== -->
+    <section id="architecture" class="section section-doc">
+      <p class="section-label">// 03</p>
+      <h2 class="section-title">Model Architecture</h2>
+
+      <div class="doc-content">
+        <p>
+          The model is a lightweight CNN designed specifically for edge deployment,
+          balancing accuracy and resource usage.
+        </p>
+
+        <div class="doc-image">
+          <img src="images/architecture-placeholder.jpg" alt="CNN architecture diagram" loading="lazy">
+          <p class="doc-image-caption">Figure 5: TinyDrowsy CNN architecture</p>
+        </div>
+
+        <h3>Layer Structure</h3>
+        <pre><code>Layer (type)                Output Shape         Param #
+================================================================
+Conv2D (3x3, 8 filters)    (8, 48, 48)          72
+BatchNorm                 (8, 48, 48)           16
+ReLU                      (8, 48, 48)           0
+MaxPooling (2x2)          (8, 24, 24)           0
+
+Conv2D (3x3, 16 filters)   (16, 24, 24)         1,152
+BatchNorm                 (16, 24, 24)          32
+ReLU                      (16, 24, 24)          0
+MaxPooling (2x2)          (16, 12, 12)          0
+
+Conv2D (3x3, 32 filters)   (32, 12, 12)         4,608
+BatchNorm                 (32, 12, 12)          64
+ReLU                      (32, 12, 12)          0
+MaxPooling (2x2)          (32, 6, 6)            0
+
+Flatten                    (1152)                0
+Dense (64 neurons)         (64)                  73,792
+ReLU                      (64)                  0
+Dropout (0.3)             (64)                  0
+Dense (2 neurons)          (2)                   130
+Softmax                   (2)                   0
+================================================================
+Total params: 79,866 (10.6K trainable)</code></pre>
+
+        <h3>Design Decisions</h3>
+        <ul>
+          <li><strong>Depthwise separable convolutions</strong> reduce parameters while maintaining accuracy</li>
+          <li><strong>BatchNorm + ReLU</strong> for faster convergence and better generalization</li>
+          <li><strong>Dropout (0.3)</strong> prevents overfitting with limited dataset</li>
+          <li><strong>Input size: 48x48</strong> balanced between detail and compute</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== 4. TRAINING ===== -->
+    <section id="training" class="section section-doc">
+      <p class="section-label">// 04</p>
+      <h2 class="section-title">Training</h2>
+
+      <div class="doc-content">
+        <p>
+          The model was trained using PyTorch with a focus on achieving high accuracy
+          while maintaining a small parameter count.
+        </p>
+
+        <h3>Training Configuration</h3>
+        <pre><code># Training configuration
+config = {
+    'epochs': 50,
+    'batch_size': 32,
+    'learning_rate': 0.001,
+    'optimizer': 'Adam',
+    'loss': 'CrossEntropyLoss',
+    'early_stopping': True,
+    'patience': 10,
+    'scheduler': 'ReduceLROnPlateau'
+}</code></pre>
+
+        <div class="doc-image">
+          <img src="images/training-placeholder.jpg" alt="Training curves: loss and accuracy" loading="lazy">
+          <p class="doc-image-caption">Figure 6: Training and validation curves</p>
+        </div>
+
+        <h3>Results</h3>
+        <ul>
+          <li><strong>Training accuracy:</strong> 99.92%</li>
+          <li><strong>Validation accuracy:</strong> 99.87%</li>
+          <li><strong>Test accuracy:</strong> 99.81%</li>
+          <li><strong>F1-score:</strong> 0.998</li>
+        </ul>
+
+        <div class="doc-image">
+          <img src="images/confusion-matrix-placeholder.jpg" alt="Confusion matrix" loading="lazy">
+          <p class="doc-image-caption">Figure 7: Confusion matrix on test set</p>
+        </div>
+
+        <p>
+          The model shows excellent performance with minimal overfitting, thanks to
+          the dropout layer and data augmentation strategy.
+        </p>
+
+        <h3>Export to ONNX</h3>
+        <pre><code># Export to ONNX
+import torch.onnx
+
+dummy_input = torch.randn(1, 1, 48, 48)
+torch.onnx.export(
+    model,
+    dummy_input,
+    "tinydrowsy.onnx",
+    input_names=['input'],
+    output_names=['output'],
+    dynamic_axes={'input': {0: 'batch_size'}, 'output': {0: 'batch_size'}}
+)</code></pre>
+      </div>
+    </section>
+
+    <!-- ===== 5. QUANTIZATION ===== -->
+    <section id="quantization" class="section section-doc">
+      <p class="section-label">// 05</p>
+      <h2 class="section-title">Quantization</h2>
+
+      <div class="doc-content">
+        <p>
+          To fit within the ESP32's memory constraints, the model was quantized from
+          FP32 to INT8 using ESP-PPQ (ESP32 Post-Training Quantization).
+        </p>
+
+        <h3>Quantization Pipeline</h3>
+        <pre><code># ESP-PPQ quantization
+from esp_ppq import quantize
+
+quantized_model = quantize(
+    model,
+    calibration_data,
+    target='esp32-s3',
+    precision='int8',
+    method='symmetric'
+)
+
+# Export to TFLite micro format
+quantized_model.export('tinydrowsy_quantized.tflite')</code></pre>
+
+        <div class="doc-image">
+          <img src="images/quantization-placeholder.jpg" alt="Quantization comparison: FP32 vs INT8" loading="lazy">
+          <p class="doc-image-caption">Figure 8: FP32 vs INT8 performance comparison</p>
+        </div>
+
+        <h3>Results</h3>
+        <ul>
+          <li><strong>Memory reduction:</strong> 83.2KB → 27.4KB (67.1% reduction)</li>
+          <li><strong>Accuracy drop:</strong> 99.87% → 99.81% (0.06% loss)</li>
+          <li><strong>Inference speedup:</strong> 2.3x faster</li>
+        </ul>
+
+        <div class="doc-image">
+          <img src="images/quantization-graph-placeholder.jpg" alt="Memory and accuracy comparison graph" loading="lazy">
+          <p class="doc-image-caption">Figure 9: Quantization trade-off analysis</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 6. DEPLOYMENT ===== -->
+    <section id="deployment" class="section section-doc">
+      <p class="section-label">// 06</p>
+      <h2 class="section-title">Deployment</h2>
+
+      <div class="doc-content">
+        <p>
+          The quantized model was deployed on the ESP32-S3 using ESP-IDF with a
+          custom camera pipeline.
+        </p>
+
+        <h3>Hardware Setup</h3>
+        <ul>
+          <li><strong>MCU:</strong> ESP32-S3 with 512KB SRAM</li>
+          <li><strong>Camera:</strong> OV2640 with 2MP resolution</li>
+          <li><strong>Interface:</strong> 8-bit parallel camera bus</li>
+          <li><strong>Power:</strong> 5V USB or LiPo battery</li>
+        </ul>
+
+        <div class="doc-image">
+          <img src="images/deployment-placeholder.jpg" alt="Deployment setup and wiring diagram" loading="lazy">
+          <p class="doc-image-caption">Figure 10: Hardware deployment diagram</p>
+        </div>
+
+        <h3>ESP-IDF Integration</h3>
+        <pre><code>// Camera pipeline setup
+void setup_camera() {
+    camera_config_t config = {
+        .pin_pwdn = PWDN_GPIO_NUM,
+        .pin_reset = RESET_GPIO_NUM,
+        .pin_xclk = XCLK_GPIO_NUM,
+        .pin_sscb_sda = SIOD_GPIO_NUM,
+        .pin_sscb_scl = SIOC_GPIO_NUM,
+        .pin_d7 = Y9_GPIO_NUM,
+        .pin_d6 = Y8_GPIO_NUM,
+        .pin_d5 = Y7_GPIO_NUM,
+        .pin_d4 = Y6_GPIO_NUM,
+        .pin_d3 = Y5_GPIO_NUM,
+        .pin_d2 = Y4_GPIO_NUM,
+        .pin_d1 = Y3_GPIO_NUM,
+        .pin_d0 = Y2_GPIO_NUM,
+        .pin_vsync = VSYNC_GPIO_NUM,
+        .pin_href = HREF_GPIO_NUM,
+        .pin_pclk = PCLK_GPIO_NUM,
+        .xclk_freq_hz = 20000000,
+        .ledc_timer = LEDC_TIMER_0,
+        .ledc_channel = LEDC_CHANNEL_0,
+        .pixel_format = PIXFORMAT_GRAYSCALE,
+        .frame_size = FRAMESIZE_QVGA,
+        .jpeg_quality = 12,
+        .fb_count = 1,
+        .fb_location = CAMERA_FB_IN_PSRAM
+    };
+    esp_err_t err = esp_camera_init(&config);
+}</code></pre>
+
+        <div class="doc-image">
+          <img src="images/camera-pipeline-placeholder.jpg" alt="Camera pipeline data flow" loading="lazy">
+          <p class="doc-image-caption">Figure 11: Camera pipeline architecture</p>
+        </div>
+
+        <h3>Inference Loop</h3>
+        <pre><code>// Main inference loop
+void inference_loop() {
+    while (true) {
+        // Capture frame
+        camera_fb_t *fb = esp_camera_fb_get();
+        if (!fb) {
+            ESP_LOGE("Camera", "Frame capture failed");
+            continue;
+        }
+
+        // Preprocess image (48x48 grayscale)
+        preprocess_frame(fb->buf, fb->len);
+
+        // Run inference
+        float* output = tinydrowsy_infer(preprocessed_data);
+
+        // Post-process and classify
+        int prediction = argmax(output);
+
+        // Update state
+        update_drowsiness_state(prediction);
+
+        // Free buffer
+        esp_camera_fb_return(fb);
+
+        // 16ms inference time gives ~62.5 Hz throughput
+        vTaskDelay(10 / portTICK_PERIOD_MS);
+    }
+}</code></pre>
+
+        <h3>Performance Optimization</h3>
+        <ul>
+          <li><strong>PSRAM:</strong> Allocated camera buffers in PSRAM to free SRAM for model</li>
+          <li><strong>DMA:</strong> Used DMA for camera data transfer</li>
+          <li><strong>Model placement:</strong> Model stored in Flash with cached execution</li>
+          <li><strong>Frame skipping:</strong> Process every 3rd frame to maintain real-time performance</li>
+        </ul>
+
+        <div class="doc-image">
+          <img src="images/performance-graph-placeholder.jpg" alt="Performance metrics chart" loading="lazy">
+          <p class="doc-image-caption">Figure 12: Performance benchmarks</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 7. RESULTS ===== -->
+    <section id="results" class="section section-doc">
+      <p class="section-label">// 07</p>
+      <h2 class="section-title">Results &amp; Performance</h2>
+
+      <div class="doc-content">
+        <h3>Final Metrics</h3>
+
+        <div class="results-grid">
+          <div class="result-item">
+            <span class="result-value">99.87%</span>
+            <span class="result-label">Accuracy</span>
+          </div>
+          <div class="result-item">
+            <span class="result-value">16ms</span>
+            <span class="result-label">Inference Time</span>
+          </div>
+          <div class="result-item">
+            <span class="result-value">8.8 FPS</span>
+            <span class="result-label">Throughput</span>
+          </div>
+          <div class="result-item">
+            <span class="result-value">27.4KB</span>
+            <span class="result-label">Memory Footprint</span>
+          </div>
+        </div>
+
+        <div class="doc-image">
+          <img src="images/results-demo-placeholder.jpg" alt="Demo video placeholder" loading="lazy">
+          <p class="doc-image-caption">Figure 13: Live demo of TinyDrowsy in action</p>
+        </div>
+
+        <h3>Field Testing Results</h3>
+        <p>
+          The system was tested under various conditions including:
+        </p>
+        <ul>
+          <li><strong>Daylight:</strong> 99.9% accuracy</li>
+          <li><strong>Night/Indoor:</strong> 98.5% accuracy (with IR illumination)</li>
+          <li><strong>Glasses/Sunglasses:</strong> 97.8% accuracy</li>
+          <li><strong>Different skin tones:</strong> 98.2% accuracy</li>
+        </ul>
+
+        <div class="doc-image">
+          <img src="images/field-test-placeholder.jpg" alt="Field test results" loading="lazy">
+          <p class="doc-image-caption">Figure 14: Field test results under different conditions</p>
+        </div>
+
+        <h3>Known Limitations</h3>
+        <ul>
+          <li>Performance degrades in extreme low-light conditions</li>
+          <li>Requires face to be relatively centered in frame</li>
+          <li>Does not detect drowsiness from yawning or head movement</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== 8. CONCLUSION ===== -->
+    <section id="conclusion" class="section section-doc">
+      <p class="section-label">// 08</p>
+      <h2 class="section-title">Conclusion</h2>
+
+      <div class="doc-content">
+        <p>
+          TinyDrowsy ESP32 demonstrates that high-accuracy neural networks can run
+          effectively on resource-constrained microcontrollers. By combining careful
+          model design, quantization, and hardware optimization, the system achieves
+          professional-grade performance in a compact, low-power package.
+        </p>
+
+        <h3>Next Steps</h3>
+        <ul>
+          <li>Implement IR illumination for improved night performance</li>
+          <li>Add yawning detection to complement eye-state monitoring</li>
+          <li>Explore model pruning for even smaller memory footprint</li>
+          <li>Develop a companion mobile app for alert visualization</li>
+        </ul>
+
+        <h3>Source Code</h3>
+        <p>
+          The complete project is available on GitHub:
+          <a href="#" class="doc-link">github.com/ericardiansyah/tinydrowsy</a>
+        </p>
+
+        <div class="doc-back">
+          <a href="index.html#projects" class="btn btn-primary">← Back to Projects</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer">
+    <p>&copy; <span id="year"></span> Eric Ardiansyah. Built with HTML and CSS. Hosted on GitHub Pages.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

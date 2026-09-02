@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- ===================== SEO ===================== -->
+  <!-- SEO -->
   <title>Eric Ardiansyah — Electrical Engineering Undergraduate</title>
   <meta name="description" content="Eric Ardiansyah is an Electrical Engineering undergraduate focused on embedded systems, TinyML, and computer architecture. Notes and projects on ESP32, RISC-V, and edge AI.">
   <meta name="robots" content="index, follow">
@@ -23,7 +23,7 @@
   <meta name="twitter:description" content="Embedded AI, firmware, and computer architecture. Notes and projects from an engineering undergraduate.">
   <meta name="twitter:image" content="assets/og-image.png">
 
-  <!-- Favicon (placeholder — replace with a real icon) -->
+  <!-- Favicon -->
   <link rel="icon" type="image/png" href="assets/favicon.png">
 
   <!-- JSON-LD structured data -->
@@ -45,7 +45,7 @@
   }
   </script>
 
-  <!-- Fonts: IBM Plex Sans (text) + IBM Plex Mono (labels / data / signature) -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -54,10 +54,10 @@
 </head>
 <body>
 
-  <!-- ===================== SKIP LINK (accessibility) ===================== -->
+  <!-- ===== SKIP LINK ===== -->
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- ===================== NAVIGATION ===================== -->
+  <!-- ===== NAVIGATION ===== -->
   <header class="site-header">
     <nav class="nav" aria-label="Primary">
       <a href="#home" class="nav-mark">EA</a>
@@ -68,12 +68,12 @@
 
       <ul class="nav-list" id="navList">
         <li><a href="#home" data-nav>home</a></li>
+        <li><a href="#blog" data-nav>recent</a></li>
         <li><a href="#about" data-nav>about</a></li>
         <li><a href="#projects" data-nav>projects</a></li>
         <li><a href="#experience" data-nav>experience</a></li>
         <li><a href="#education" data-nav>education</a></li>
         <li><a href="#skills" data-nav>skills</a></li>
-        <li><a href="#blog" data-nav>blog</a></li>
         <li><a href="#contact" data-nav>contact</a></li>
       </ul>
     </nav>
@@ -81,7 +81,7 @@
 
   <main id="main">
 
-    <!-- ===================== 1. HOME ===================== -->
+    <!-- ===== 1. HOME ===== -->
     <section id="home" class="section section-home">
       <p class="eyebrow">// electrical engineering</p>
       <h1 class="home-name">Eric Ardiansyah</h1>
@@ -89,13 +89,56 @@
       <p class="home-focus">Embedded AI <span class="dot">·</span> Firmware <span class="dot">·</span> Computer Architecture</p>
       <p class="home-intro">
         I'm an undergraduate at Universitas Sebelas Maret, building things at the
-        boundary of hardware and machine learning &mdash; small models that run on
+        boundary of hardware and machine learning — small models that run on
         even smaller chips. This site is my engineering notebook: projects,
         write-ups, and the occasional dead end.
       </p>
     </section>
 
-    <!-- ===================== 2. ABOUT ===================== -->
+    <!-- ===== 2. BLOG / RECENT ACTIVITY ===== -->
+    <section id="blog" class="section">
+      <p class="section-label">// latest</p>
+      <h2 class="section-title">What I'm Working On</h2>
+
+      <div class="blog-featured">
+        <div class="blog-featured-icon">⚡</div>
+        <div class="blog-featured-content">
+          <p class="blog-featured-text">
+            Currently working on <strong>TinyDrowsy deployment</strong> — optimizing the inference pipeline and field testing under real lighting conditions.
+          </p>
+          <a href="tinydrowsy.html" class="blog-featured-link">Follow the project →</a>
+        </div>
+      </div>
+
+      <ul class="blog-list">
+        <li class="blog-item">
+          <a href="tinydrowsy.html" class="blog-link">
+            <span class="blog-post-title">TinyDrowsy: Deployment & Field Testing</span>
+            <span class="blog-post-status">in progress</span>
+          </a>
+        </li>
+        <li class="blog-item">
+          <a href="#" class="blog-link">
+            <span class="blog-post-title">Understanding CNN Quantization</span>
+            <span class="blog-post-status">draft</span>
+          </a>
+        </li>
+        <li class="blog-item">
+          <a href="#" class="blog-link">
+            <span class="blog-post-title">Learning RISC-V</span>
+            <span class="blog-post-status">planned</span>
+          </a>
+        </li>
+        <li class="blog-item">
+          <a href="#" class="blog-link">
+            <span class="blog-post-title">FPGA Journey</span>
+            <span class="blog-post-status">planned</span>
+          </a>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ===== 3. ABOUT ===== -->
     <section id="about" class="section">
       <p class="section-label">// 01 &nbsp;about</p>
       <h2 class="section-title">About</h2>
@@ -103,7 +146,7 @@
       <div class="prose">
         <p>
           I'm currently studying Electrical Engineering, with a growing focus on
-          embedded systems &mdash; the layer where code meets electricity. Most of
+          embedded systems — the layer where code meets electricity. Most of
           my work lives somewhere between a microcontroller and a machine learning
           model: getting a neural network small enough, and a circuit reliable
           enough, that the two can actually work together.
@@ -111,21 +154,21 @@
         <p>
           My interests span TinyML, computer architecture, RISC-V, FPGAs, and
           digital design. I don't come from a background where any of this was
-          easy &mdash; I was weak in math and physics early on, and most of what I
+          easy — I was weak in math and physics early on, and most of what I
           know now came from building things until they worked, then figuring out
           why. That's still how I learn.
         </p>
         <p>
           Outside of coursework, I help maintain a small community WiFi network,
           tinker with reverse engineering and CTF challenges, and try to keep a
-          disciplined routine &mdash; early mornings, consistent training, steady
+          disciplined routine — early mornings, consistent training, steady
           progress. Long term, I'm aiming toward graduate study and a career built
           around hardware that thinks for itself.
         </p>
       </div>
     </section>
 
-    <!-- ===================== 3. PROJECTS ===================== -->
+    <!-- ===== 4. PROJECTS ===== -->
     <section id="projects" class="section">
       <p class="section-label">// 02 &nbsp;projects</p>
       <h2 class="section-title">Projects</h2>
@@ -133,14 +176,17 @@
 
       <div class="project-grid">
 
-        <!-- Project card: duplicate this <article> block to add a new project -->
-        <article class="project-card">
+        <!-- TinyDrowsy - Featured Project -->
+        <article class="project-card project-card-featured">
+          <div class="project-image">
+            <img src="images/tinydrowsy-thumb.jpg" alt="TinyDrowsy ESP32 project thumbnail" loading="lazy">
+            <span class="project-featured-badge">featured</span>
+          </div>
           <h3 class="project-title">TinyDrowsy ESP32</h3>
           <p class="project-desc">
             A lightweight CNN for driver drowsiness detection, running eye-state
-            classification directly on an ESP32-CAM. Roughly 10K parameters,
-            under 50 KB as an ONNX model, trained from scratch and quantized for
-            on-device inference.
+            classification directly on an ESP32-CAM. 10K parameters, under 50 KB,
+            quantized for on-device inference.
           </p>
           <ul class="project-tags">
             <li>ESP32</li>
@@ -150,115 +196,92 @@
           </ul>
           <div class="project-links">
             <a class="btn btn-outline" href="#" aria-label="View TinyDrowsy ESP32 on GitHub">GitHub</a>
-            <a class="btn btn-text" href="#" aria-label="Read more about TinyDrowsy ESP32">Read more →</a>
+            <a class="btn btn-primary" href="tinydrowsy.html" aria-label="Read full documentation for TinyDrowsy ESP32">Learn more →</a>
           </div>
         </article>
 
+        <!-- MLBB Virality Clipper -->
         <article class="project-card">
-          <h3 class="project-title">ESP32 AI Drowsiness Detection</h3>
+          <div class="project-image">
+            <img src="images/mlbb-placeholder.jpg" alt="MLBB Virality Clipper project thumbnail" loading="lazy">
+          </div>
+          <h3 class="project-title">MLBB Virality Clipper</h3>
           <p class="project-desc">
-            The applied side of TinyDrowsy: dataset engineering from public and
-            self-captured images, on-device deployment, and field testing under
-            real lighting conditions &mdash; including what happens when the
-            training data doesn't match the camera.
+            Python automation for turning Mobile Legends VODs into short-form
+            clip candidates. Emotion-first detection prioritizing screams,
+            laughter, and chaos.
           </p>
           <ul class="project-tags">
+            <li>Python</li>
             <li>Computer Vision</li>
-            <li>Embedded AI</li>
-            <li>C/C++</li>
+            <li>Automation</li>
           </ul>
           <div class="project-links">
-            <a class="btn btn-outline" href="#" aria-label="View ESP32 AI Drowsiness Detection on GitHub">GitHub</a>
-            <a class="btn btn-text" href="#" aria-label="Read more about ESP32 AI Drowsiness Detection">Read more →</a>
+            <a class="btn btn-outline" href="#" aria-label="View MLBB Virality Clipper on GitHub">GitHub</a>
+            <a class="btn btn-text" href="#" aria-label="Read more about MLBB Virality Clipper">Read more →</a>
           </div>
         </article>
 
-        <article class="project-card project-card-placeholder">
-          <h3 class="project-title">Future FPGA CPU</h3>
+        <!-- Marketplace Hardware Deal Ranker -->
+        <article class="project-card">
+          <div class="project-image">
+            <img src="images/marketplace-placeholder.jpg" alt="Marketplace Hardware Deal Ranker project thumbnail" loading="lazy">
+          </div>
+          <h3 class="project-title">Marketplace Hardware Deal Ranker</h3>
           <p class="project-desc">
-            A small CPU core implemented in an FPGA, built up instruction by
-            instruction to understand computer architecture from the gates up.
-            Planned.
+            Local ranking and dashboard for comparing used GPUs, laptops, and
+            PC parts. Manual listing data with future CSV/JSON import support.
           </p>
           <ul class="project-tags">
-            <li>FPGA</li>
-            <li>Verilog</li>
-            <li>Digital Design</li>
+            <li>Python</li>
+            <li>Ranking</li>
+            <li>Dashboard</li>
           </ul>
           <div class="project-links">
-            <a class="btn btn-outline btn-disabled" aria-disabled="true">GitHub</a>
-            <span class="project-status">in planning</span>
+            <a class="btn btn-outline" href="#" aria-label="View Marketplace Hardware Deal Ranker on GitHub">GitHub</a>
+            <a class="btn btn-text" href="#" aria-label="Read more about Marketplace Hardware Deal Ranker">Read more →</a>
           </div>
         </article>
 
-        <article class="project-card project-card-placeholder">
-          <h3 class="project-title">Future RISC-V</h3>
-          <p class="project-desc">
-            Working through the RISC-V ISA by implementing a subset of it in
-            simulation, then in hardware. A step toward building processors
-            instead of just using them.
-          </p>
-          <ul class="project-tags">
-            <li>RISC-V</li>
-            <li>Computer Architecture</li>
-          </ul>
-          <div class="project-links">
-            <a class="btn btn-outline btn-disabled" aria-disabled="true">GitHub</a>
-            <span class="project-status">in planning</span>
+        <!-- Jadwal Apps -->
+        <article class="project-card">
+          <div class="project-image">
+            <img src="images/jadwal-placeholder.jpg" alt="Jadwal Apps project thumbnail" loading="lazy">
           </div>
-        </article>
-
-        <article class="project-card project-card-placeholder">
-          <h3 class="project-title">Future Embedded AI</h3>
+          <h3 class="project-title">Jadwal Apps</h3>
           <p class="project-desc">
-            A follow-up to TinyDrowsy exploring model compression and
-            quantization techniques on a different class of microcontroller.
+            Flutter-based Android schedule app for students. Manage personal
+            schedules, tasks, and share group schedules with friends in real-time.
           </p>
           <ul class="project-tags">
-            <li>TinyML</li>
-            <li>STM32</li>
+            <li>Flutter</li>
+            <li>Dart</li>
+            <li>Firebase</li>
           </ul>
           <div class="project-links">
-            <a class="btn btn-outline btn-disabled" aria-disabled="true">GitHub</a>
-            <span class="project-status">in planning</span>
-          </div>
-        </article>
-
-        <article class="project-card project-card-placeholder">
-          <h3 class="project-title">Future IoT</h3>
-          <p class="project-desc">
-            Extending the village WiFi monitoring work into a proper distributed
-            IoT system, with device health, uptime, and alerting.
-          </p>
-          <ul class="project-tags">
-            <li>IoT</li>
-            <li>Networking</li>
-          </ul>
-          <div class="project-links">
-            <a class="btn btn-outline btn-disabled" aria-disabled="true">GitHub</a>
-            <span class="project-status">in planning</span>
+            <a class="btn btn-outline" href="#" aria-label="View Jadwal Apps on GitHub">GitHub</a>
+            <a class="btn btn-text" href="#" aria-label="Read more about Jadwal Apps">Read more →</a>
           </div>
         </article>
 
       </div>
     </section>
 
-    <!-- ===================== 4. EXPERIENCE ===================== -->
+    <!-- ===== 5. EXPERIENCE ===== -->
     <section id="experience" class="section">
       <p class="section-label">// 03 &nbsp;experience</p>
       <h2 class="section-title">Experience</h2>
 
-      <!-- Timeline item: duplicate this <div class="timeline-item"> to add a new entry -->
       <ol class="timeline">
         <li class="timeline-item">
-          <div class="timeline-date">2025 &mdash; present</div>
+          <div class="timeline-date">2025 — present</div>
           <div class="timeline-body">
             <h3 class="timeline-title">Role / Organization</h3>
             <p class="timeline-desc">Placeholder description of the role, responsibilities, and outcomes.</p>
           </div>
         </li>
         <li class="timeline-item">
-          <div class="timeline-date">2024 &mdash; 2025</div>
+          <div class="timeline-date">2024 — 2025</div>
           <div class="timeline-body">
             <h3 class="timeline-title">Role / Organization</h3>
             <p class="timeline-desc">Placeholder description of the role, responsibilities, and outcomes.</p>
@@ -274,7 +297,7 @@
       </ol>
     </section>
 
-    <!-- ===================== 5. EDUCATION ===================== -->
+    <!-- ===== 6. EDUCATION ===== -->
     <section id="education" class="section">
       <p class="section-label">// 04 &nbsp;education</p>
       <h2 class="section-title">Education</h2>
@@ -282,7 +305,7 @@
       <div class="education-item">
         <div class="education-head">
           <h3 class="education-school">Universitas Sebelas Maret (UNS)</h3>
-          <span class="education-date">2024 &mdash; present</span>
+          <span class="education-date">2024 — present</span>
         </div>
         <p class="education-degree">B.Eng. in Electrical Engineering</p>
         <p class="education-detail">
@@ -292,7 +315,7 @@
       </div>
     </section>
 
-    <!-- ===================== 6. SKILLS ===================== -->
+    <!-- ===== 7. SKILLS ===== -->
     <section id="skills" class="section">
       <p class="section-label">// 05 &nbsp;skills</p>
       <h2 class="section-title">Skills</h2>
@@ -342,44 +365,9 @@
       </div>
     </section>
 
-    <!-- ===================== 7. BLOG ===================== -->
-    <section id="blog" class="section">
-      <p class="section-label">// 06 &nbsp;blog</p>
-      <h2 class="section-title">Blog</h2>
-      <p class="section-intro">Write-ups on what I'm building and what I'm learning. Coming soon.</p>
-
-      <!-- Blog item: duplicate this <article> to add a new post -->
-      <ul class="blog-list">
-        <li class="blog-item">
-          <a href="#" class="blog-link">
-            <span class="blog-post-title">Building TinyDrowsy</span>
-            <span class="blog-post-status">draft</span>
-          </a>
-        </li>
-        <li class="blog-item">
-          <a href="#" class="blog-link">
-            <span class="blog-post-title">Understanding CNN Quantization</span>
-            <span class="blog-post-status">draft</span>
-          </a>
-        </li>
-        <li class="blog-item">
-          <a href="#" class="blog-link">
-            <span class="blog-post-title">Learning RISC-V</span>
-            <span class="blog-post-status">planned</span>
-          </a>
-        </li>
-        <li class="blog-item">
-          <a href="#" class="blog-link">
-            <span class="blog-post-title">FPGA Journey</span>
-            <span class="blog-post-status">planned</span>
-          </a>
-        </li>
-      </ul>
-    </section>
-
-    <!-- ===================== 8. CONTACT ===================== -->
+    <!-- ===== 8. CONTACT ===== -->
     <section id="contact" class="section">
-      <p class="section-label">// 07 &nbsp;contact</p>
+      <p class="section-label">// 06 &nbsp;contact</p>
       <h2 class="section-title">Contact</h2>
 
       <ul class="contact-list">
@@ -393,7 +381,7 @@
 
   </main>
 
-  <!-- ===================== FOOTER ===================== -->
+  <!-- ===== FOOTER ===== -->
   <footer class="site-footer">
     <p>&copy; <span id="year"></span> Eric Ardiansyah. Built with HTML and CSS. Hosted on GitHub Pages.</p>
   </footer>
