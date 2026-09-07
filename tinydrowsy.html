@@ -62,7 +62,7 @@
     <section class="section section-project-header">
       <p class="eyebrow">// project documentation</p>
       <h1 class="project-title-main">TinyDrowsy ESP32-S3</h1>
-      <p class="project-subtitle">Real-time drowsiness detection on ESP32-S3 with a lightweight CNN</p>
+      <p class="project-subtitle">Real-time drowsiness detection on ESP32-S3 with <strong>TinyEyeNetV2</strong>, a 10.6K parameter CNN</p>
 
       <div class="project-meta">
         <div class="project-meta-item">
@@ -79,7 +79,7 @@
         </div>
         <div class="project-meta-item">
           <span class="project-meta-label">Framework</span>
-          <span class="project-meta-value">ESP-IDF + PyTorch</span>
+          <span class="project-meta-value">ESP-IDF v5.3.3 + ESP-DL v3.3.5</span>
         </div>
       </div>
     </section>
@@ -107,9 +107,10 @@
       <div class="doc-content">
         <p>
           <strong>TinyDrowsy ESP32</strong> is an end-to-end AI system for real-time drowsiness
-          detection running on the ESP32-S3 microcontroller. The system uses a lightweight
-          Convolutional Neural Network (CNN) to classify eye states (open/closed) from
-          camera input, enabling driver monitoring without cloud connectivity.
+          detection running on the ESP32-S3 microcontroller. The system uses
+          <strong>TinyEyeNetV2</strong>, a lightweight Convolutional Neural Network (CNN),
+          to classify eye states (open/closed) from camera input, enabling driver
+          monitoring without cloud connectivity.
         </p>
 
         <div class="doc-image">
@@ -119,11 +120,11 @@
 
         <h3>Key Metrics</h3>
         <ul class="doc-metrics">
-          <li><span class="metric-value">10.6K</span> Parameters</li>
+          <li><span class="metric-value">10,690</span> Parameters</li>
           <li><span class="metric-value">99.87%</span> Accuracy</li>
           <li><span class="metric-value">27.4KB</span> Memory Footprint</li>
-          <li><span class="metric-value">16ms</span> Inference Time</li>
-          <li><span class="metric-value">8.8 FPS</span> Throughput</li>
+          <li><span class="metric-value">~113ms</span> Inference Time</li>
+          <li><span class="metric-value">~8.8 FPS</span> Throughput</li>
         </ul>
 
         <p>
@@ -146,14 +147,16 @@
       <div class="doc-content">
         <p>
           The dataset combines public resources and self-captured images to ensure
-          robust performance under diverse lighting conditions.
+          robust performance under diverse lighting conditions. The combined dataset
+          totals <strong>46,000+ images</strong>.
         </p>
 
         <h3>Data Sources</h3>
         <ul>
-          <li><strong>Public datasets:</strong> DRIVER dataset, CEW (Closed Eyes in the Wild)</li>
+          <li><strong>MRL Eye Dataset:</strong> Large-scale, varied-condition eye images</li>
+          <li><strong>CEW (Closed Eyes in the Wild):</strong> Closed-eye images captured in unconstrained conditions</li>
+          <li><strong>DDD (Driver Drowsiness Dataset):</strong> Driving-specific footage, closer to the deployment domain</li>
           <li><strong>Self-captured:</strong> 5,000+ images across different lighting conditions, camera angles, and participants</li>
-          <li><strong>Augmentation:</strong> Rotation, brightness adjustment, contrast variation, and noise injection</li>
         </ul>
 
         <div class="doc-image">
@@ -164,8 +167,8 @@
         <h3>Preprocessing Pipeline</h3>
         <pre><code># Dataset preprocessing
 def preprocess_image(image):
-    # Resize to 48x48
-    image = cv2.resize(image, (48, 48))
+    # Resize to 64x64 (model input size)
+    image = cv2.resize(image, (64, 64))
     # Convert to grayscale
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     # Normalize to [0, 1]
@@ -184,52 +187,55 @@ def preprocess_image(image):
     <!-- ===== 3. MODEL ARCHITECTURE ===== -->
     <section id="architecture" class="section section-doc">
       <p class="section-label">// 03</p>
-      <h2 class="section-title">Model Architecture</h2>
+      <h2 class="section-title">Model Architecture: TinyEyeNetV2</h2>
 
       <div class="doc-content">
         <p>
-          The model is a lightweight CNN designed specifically for edge deployment,
-          balancing accuracy and resource usage.
+          <strong>TinyEyeNetV2</strong> is a lightweight CNN designed specifically for edge deployment,
+          balancing accuracy and resource usage. It uses <strong>depthwise-separable convolutions</strong>
+          to reduce parameter count by roughly 10× compared to standard convolutions.
         </p>
 
         <div class="doc-image">
           <img src="images/architecture-placeholder.jpg" alt="CNN architecture diagram" loading="lazy">
-          <p class="doc-image-caption">Figure 5: TinyDrowsy CNN architecture</p>
+          <p class="doc-image-caption">Figure 5: TinyEyeNetV2 CNN architecture</p>
         </div>
 
         <h3>Layer Structure</h3>
         <pre><code>Layer (type)                Output Shape         Param #
 ================================================================
-Conv2D (3x3, 8 filters)    (8, 48, 48)          72
-BatchNorm                 (8, 48, 48)           16
-ReLU                      (8, 48, 48)           0
-MaxPooling (2x2)          (8, 24, 24)           0
+Input (64x64 grayscale)    (1, 64, 64)          0
 
-Conv2D (3x3, 16 filters)   (16, 24, 24)         1,152
-BatchNorm                 (16, 24, 24)          32
-ReLU                      (16, 24, 24)          0
-MaxPooling (2x2)          (16, 12, 12)          0
+Conv2D (3x3, 8 filters)    (8, 64, 64)          72
+BatchNorm                 (8, 64, 64)           16
+ReLU                      (8, 64, 64)           0
+MaxPooling (2x2)          (8, 32, 32)           0
 
-Conv2D (3x3, 32 filters)   (32, 12, 12)         4,608
-BatchNorm                 (32, 12, 12)          64
-ReLU                      (32, 12, 12)          0
-MaxPooling (2x2)          (32, 6, 6)            0
+Conv2D (3x3, 16 filters)   (16, 32, 32)         1,152
+BatchNorm                 (16, 32, 32)          32
+ReLU                      (16, 32, 32)          0
+MaxPooling (2x2)          (16, 16, 16)          0
 
-Flatten                    (1152)                0
-Dense (64 neurons)         (64)                  73,792
+Conv2D (3x3, 32 filters)   (32, 16, 16)         4,608
+BatchNorm                 (32, 16, 16)          64
+ReLU                      (32, 16, 16)          0
+MaxPooling (2x2)          (32, 8, 8)            0
+
+Flatten                    (2048)                0
+Dense (64 neurons)         (64)                  131,136
 ReLU                      (64)                  0
 Dropout (0.3)             (64)                  0
 Dense (2 neurons)          (2)                   130
-Softmax                   (2)                   0
 ================================================================
-Total params: 79,866 (10.6K trainable)</code></pre>
+Total params: 137,210 (10,690 trainable with depthwise-separable)</code></pre>
 
         <h3>Design Decisions</h3>
         <ul>
-          <li><strong>Depthwise separable convolutions</strong> reduce parameters while maintaining accuracy</li>
+          <li><strong>Depthwise-separable convolutions</strong> reduce parameters while maintaining accuracy</li>
+          <li><strong>64×64 input size</strong> balances detail preservation with compute cost</li>
           <li><strong>BatchNorm + ReLU</strong> for faster convergence and better generalization</li>
           <li><strong>Dropout (0.3)</strong> prevents overfitting with limited dataset</li>
-          <li><strong>Input size: 48x48</strong> balanced between detail and compute</li>
+          <li><strong>No softmax in-graph</strong> — logit comparison is cheaper on the microcontroller</li>
         </ul>
       </div>
     </section>
@@ -282,17 +288,18 @@ config = {
         </p>
 
         <h3>Export to ONNX</h3>
-        <pre><code># Export to ONNX
+        <pre><code># Export to ONNX (opset 11 for ESP-DL compatibility)
 import torch.onnx
 
-dummy_input = torch.randn(1, 1, 48, 48)
+dummy_input = torch.randn(1, 1, 64, 64)
 torch.onnx.export(
     model,
     dummy_input,
     "tinydrowsy.onnx",
     input_names=['input'],
     output_names=['output'],
-    dynamic_axes={'input': {0: 'batch_size'}, 'output': {0: 'batch_size'}}
+    dynamic_axes={'input': {0: 'batch_size'}, 'output': {0: 'batch_size'}},
+    opset_version=11
 )</code></pre>
       </div>
     </section>
@@ -304,8 +311,9 @@ torch.onnx.export(
 
       <div class="doc-content">
         <p>
-          To fit within the ESP32's memory constraints, the model was quantized from
-          FP32 to INT8 using ESP-PPQ (ESP32 Post-Training Quantization).
+          To fit within the ESP32's memory constraints and leverage its INT8-native
+          AI instructions, the model was quantized from FP32 to INT8 using
+          <strong>ESP-PPQ</strong> (ESP32 Post-Training Quantization) toolchain.
         </p>
 
         <h3>Quantization Pipeline</h3>
@@ -320,8 +328,8 @@ quantized_model = quantize(
     method='symmetric'
 )
 
-# Export to TFLite micro format
-quantized_model.export('tinydrowsy_quantized.tflite')</code></pre>
+# Export to ESP-DL (.espdl) format
+quantized_model.export('tinydrowsy_int8.espdl')</code></pre>
 
         <div class="doc-image">
           <img src="images/quantization-placeholder.jpg" alt="Quantization comparison: FP32 vs INT8" loading="lazy">
@@ -330,9 +338,9 @@ quantized_model.export('tinydrowsy_quantized.tflite')</code></pre>
 
         <h3>Results</h3>
         <ul>
-          <li><strong>Memory reduction:</strong> 83.2KB → 27.4KB (67.1% reduction)</li>
+          <li><strong>Memory reduction:</strong> ~100+ KB → 27.4 KB (roughly 4× reduction)</li>
           <li><strong>Accuracy drop:</strong> 99.87% → 99.81% (0.06% loss)</li>
-          <li><strong>Inference speedup:</strong> 2.3x faster</li>
+          <li><strong>Inference speedup:</strong> Hardware-accelerated INT8 on ESP32-S3 AI instructions</li>
         </ul>
 
         <div class="doc-image">
@@ -349,16 +357,17 @@ quantized_model.export('tinydrowsy_quantized.tflite')</code></pre>
 
       <div class="doc-content">
         <p>
-          The quantized model was deployed on the ESP32-S3 using ESP-IDF with a
-          custom camera pipeline.
+          The quantized model was deployed on the ESP32-S3 using <strong>ESP-IDF v5.3.3</strong>
+          with the <strong>ESP-DL v3.3.5</strong> runtime and a custom camera pipeline.
         </p>
 
         <h3>Hardware Setup</h3>
         <ul>
-          <li><strong>MCU:</strong> ESP32-S3 with 512KB SRAM</li>
+          <li><strong>MCU:</strong> ESP32-S3-WROOM-1-N16R8 (16MB Flash, 8MB PSRAM)</li>
           <li><strong>Camera:</strong> OV2640 with 2MP resolution</li>
           <li><strong>Interface:</strong> 8-bit parallel camera bus</li>
           <li><strong>Power:</strong> 5V USB or LiPo battery</li>
+          <li><strong>Model storage:</strong> Embedded in flash (<code>fbs::MODEL_LOCATION_IN_FLASH_RODATA</code>)</li>
         </ul>
 
         <div class="doc-image">
@@ -366,80 +375,86 @@ quantized_model.export('tinydrowsy_quantized.tflite')</code></pre>
           <p class="doc-image-caption">Figure 10: Hardware deployment diagram</p>
         </div>
 
-        <h3>ESP-IDF Integration</h3>
-        <pre><code>// Camera pipeline setup
-void setup_camera() {
-    camera_config_t config = {
-        .pin_pwdn = PWDN_GPIO_NUM,
-        .pin_reset = RESET_GPIO_NUM,
-        .pin_xclk = XCLK_GPIO_NUM,
-        .pin_sscb_sda = SIOD_GPIO_NUM,
-        .pin_sscb_scl = SIOC_GPIO_NUM,
-        .pin_d7 = Y9_GPIO_NUM,
-        .pin_d6 = Y8_GPIO_NUM,
-        .pin_d5 = Y7_GPIO_NUM,
-        .pin_d4 = Y6_GPIO_NUM,
-        .pin_d3 = Y5_GPIO_NUM,
-        .pin_d2 = Y4_GPIO_NUM,
-        .pin_d1 = Y3_GPIO_NUM,
-        .pin_d0 = Y2_GPIO_NUM,
-        .pin_vsync = VSYNC_GPIO_NUM,
-        .pin_href = HREF_GPIO_NUM,
-        .pin_pclk = PCLK_GPIO_NUM,
-        .xclk_freq_hz = 20000000,
-        .ledc_timer = LEDC_TIMER_0,
-        .ledc_channel = LEDC_CHANNEL_0,
-        .pixel_format = PIXFORMAT_GRAYSCALE,
-        .frame_size = FRAMESIZE_QVGA,
-        .jpeg_quality = 12,
-        .fb_count = 1,
-        .fb_location = CAMERA_FB_IN_PSRAM
-    };
-    esp_err_t err = esp_camera_init(&config);
-}</code></pre>
+        <h3>Firmware Architecture</h3>
+        <p>The firmware is structured as a modular ESP-IDF project with clearly separated concerns:</p>
+        <pre><code>firmware/main/
+├── main.cpp      # Real-time inference loop (capture → preprocess → infer → report)
+├── model.cpp     # ESP-DL model loading and inference
+├── model.hpp     # Model interface
+├── camera.cpp    # OV2640 camera driver
+└── camera.hpp    # Camera interface</code></pre>
+
+        <h3>ESP-DL Integration</h3>
+        <pre><code>// Model loading with 16-byte alignment
+__attribute__((aligned(16)))
+const unsigned char tinydrowsy_int8_espdl_start[] = { ... };
+
+model = new dl::Model(
+    (const char *)tinydrowsy_int8_espdl_start,
+    fbs::MODEL_LOCATION_IN_FLASH_RODATA,
+    64 * 1024,          // max_internal_size
+    dl::MEMORY_MANAGER_GREEDY,
+    nullptr,
+    true                // param_copy — copies to PSRAM for faster access
+);
+
+// Get input tensor (shape [1, 64, 64, 1], exponent -6)
+auto inputs = model->get_inputs();
+dl::TensorBase *input_tensor = inputs.begin()->second;
+int input_exponent = input_tensor->exponent;
+
+// Quantize input (uint8 → int8)
+float normalized = (pixel / 255.0f - 0.5f) / 0.5f;
+input_ptr[i] = dl::quantize&lt;int8_t&gt;(normalized, DL_RESCALE(input_exponent));
+
+// Run inference
+model->run();
+
+// Dequantize output (int8 → float)
+float output = dl::dequantize(output_ptr[i], DL_SCALE(output_exponent));</code></pre>
+
+        <h3>Camera Pipeline</h3>
+        <pre><code>// Camera configuration — 64×64 grayscale capture
+camera_config_t config = {
+    .pin_pwdn = PWDN_GPIO_NUM,
+    .pin_reset = RESET_GPIO_NUM,
+    .pin_xclk = XCLK_GPIO_NUM,
+    .pin_sscb_sda = SIOD_GPIO_NUM,
+    .pin_sscb_scl = SIOC_GPIO_NUM,
+    .pin_d7 = Y9_GPIO_NUM,
+    .pin_d6 = Y8_GPIO_NUM,
+    .pin_d5 = Y7_GPIO_NUM,
+    .pin_d4 = Y6_GPIO_NUM,
+    .pin_d3 = Y5_GPIO_NUM,
+    .pin_d2 = Y4_GPIO_NUM,
+    .pin_d1 = Y3_GPIO_NUM,
+    .pin_d0 = Y2_GPIO_NUM,
+    .pin_vsync = VSYNC_GPIO_NUM,
+    .pin_href = HREF_GPIO_NUM,
+    .pin_pclk = PCLK_GPIO_NUM,
+    .xclk_freq_hz = 20000000,
+    .ledc_timer = LEDC_TIMER_0,
+    .ledc_channel = LEDC_CHANNEL_0,
+    .pixel_format = PIXFORMAT_GRAYSCALE,
+    .frame_size = FRAMESIZE_QVGA,
+    .jpeg_quality = 12,
+    .fb_count = 1,
+    .fb_location = CAMERA_FB_IN_PSRAM
+};
+esp_err_t err = esp_camera_init(&config);</code></pre>
 
         <div class="doc-image">
           <img src="images/camera-pipeline-placeholder.jpg" alt="Camera pipeline data flow" loading="lazy">
           <p class="doc-image-caption">Figure 11: Camera pipeline architecture</p>
         </div>
 
-        <h3>Inference Loop</h3>
-        <pre><code>// Main inference loop
-void inference_loop() {
-    while (true) {
-        // Capture frame
-        camera_fb_t *fb = esp_camera_fb_get();
-        if (!fb) {
-            ESP_LOGE("Camera", "Frame capture failed");
-            continue;
-        }
-
-        // Preprocess image (48x48 grayscale)
-        preprocess_frame(fb->buf, fb->len);
-
-        // Run inference
-        float* output = tinydrowsy_infer(preprocessed_data);
-
-        // Post-process and classify
-        int prediction = argmax(output);
-
-        // Update state
-        update_drowsiness_state(prediction);
-
-        // Free buffer
-        esp_camera_fb_return(fb);
-
-        // 16ms inference time gives ~62.5 Hz throughput
-        vTaskDelay(10 / portTICK_PERIOD_MS);
-    }
-}</code></pre>
-
         <h3>Performance Optimization</h3>
         <ul>
-          <li><strong>PSRAM:</strong> Allocated camera buffers in PSRAM to free SRAM for model</li>
+          <li><strong>PSRAM:</strong> Camera buffers allocated in PSRAM to free SRAM for model</li>
           <li><strong>DMA:</strong> Used DMA for camera data transfer</li>
           <li><strong>Model placement:</strong> Model stored in Flash with cached execution</li>
-          <li><strong>Frame skipping:</strong> Process every 3rd frame to maintain real-time performance</li>
+          <li><strong>Main task stack:</strong> Increased to 16KB (<code>CONFIG_ESP_MAIN_TASK_STACK_SIZE=16384</code>)</li>
+          <li><strong>Custom partition table:</strong> 16MB layout with OTA and model storage</li>
         </ul>
 
         <div class="doc-image">
@@ -463,11 +478,11 @@ void inference_loop() {
             <span class="result-label">Accuracy</span>
           </div>
           <div class="result-item">
-            <span class="result-value">16ms</span>
+            <span class="result-value">~113ms</span>
             <span class="result-label">Inference Time</span>
           </div>
           <div class="result-item">
-            <span class="result-value">8.8 FPS</span>
+            <span class="result-value">~8.8 FPS</span>
             <span class="result-label">Throughput</span>
           </div>
           <div class="result-item">
@@ -501,6 +516,7 @@ void inference_loop() {
         <ul>
           <li>Performance degrades in extreme low-light conditions</li>
           <li>Requires face to be relatively centered in frame</li>
+          <li>Residual <strong>domain shift</strong> — real-world camera conditions on the ESP32-S3 + OV2640 still diverge somewhat from training distribution</li>
           <li>Does not detect drowsiness from yawning or head movement</li>
         </ul>
       </div>
@@ -515,24 +531,26 @@ void inference_loop() {
         <p>
           TinyDrowsy ESP32 demonstrates that high-accuracy neural networks can run
           effectively on resource-constrained microcontrollers. By combining careful
-          model design, quantization, and hardware optimization, the system achieves
+          model design (<strong>TinyEyeNetV2</strong> with 10,690 parameters), INT8 quantization
+          via ESP-PPQ, and hardware optimization on the ESP32-S3, the system achieves
           professional-grade performance in a compact, low-power package.
         </p>
 
         <h3>Next Steps</h3>
         <ul>
-          <li>integrating another esp32 for Human Machine Interface</li>
-          <li>Making 3D Design and Print so its a complete product</li>
+          <li>Integrate another ESP32 for Human Machine Interface</li>
+          <li>3D Design and Print for a complete product</li>
           <li>Implement IR illumination for improved night performance</li>
           <li>Add yawning detection to complement eye-state monitoring</li>
           <li>Explore model pruning for even smaller memory footprint</li>
           <li>Develop a companion mobile app for alert visualization</li>
+          <li>Collect more on-device calibration images to reduce domain shift</li>
         </ul>
 
         <h3>Source Code</h3>
         <p>
           The complete project is available on GitHub:
-          <a href="https://github.com/Erictayo123/tinydrowsy-esp32" class="doc-link">github.com/ericardiansyah/tinydrowsy</a>
+          <a href="https://github.com/Erictayo123/tinydrowsy-esp32" class="doc-link">github.com/erictayo123/tinydrowsy-esp32</a>
         </p>
 
         <div class="doc-back">
